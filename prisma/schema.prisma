@@ -9,3 +9,65 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+model User{
+  id             String    @id @default(uuid()) @db.VarChar(255)
+  name           String?
+  email          String?   @unique
+  emailVerified  DateTime? 
+  image          String?
+  hashedPassword String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  favouriteIds   String[]
+
+  accounts Account[]
+  listings Listing[]
+  reservations Reservation[]
+}
+
+model Account{
+  id                String    @id @default(uuid()) @db.VarChar(255)
+  userId            String    @db.VarChar(255)
+  type              String
+  provider          String
+  providerAccountId String
+  refresh_token     String?
+  access_token      String?
+  expires_at        Int?
+  token_type        String?
+  scope             String?
+  id_token          String?
+  session_state     String?
+  user              User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
+
+model Listing {
+  id             String     @id @default(uuid()) @db.VarChar(255)
+  title          String
+  description    String
+  imageSrc       String
+  createdAt      DateTime   @default(now())
+  category       String
+  roomCount      Int
+  bathroomCount  Int
+  guestCount     Int
+  locationValue  String
+  userId         String    @db.VarChar(255)
+  price          Int
+
+  user           User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  reservations   Reservation[]
+}
+
+model Reservation {
+  id          String        @id @default(uuid()) @db.VarChar(255)
+  userId      String        @db.VarChar(255)
+  listingId   String        @db.VarChar(255)
+  startDate   DateTime
+  endDate     DateTime
+  totalPrice  Int
+  createdAt   DateTime      @default(now())
+
+  user        User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  listing     Listing       @relation(fields: [listingId], references: [id], onDelete: Cascade)
+}
