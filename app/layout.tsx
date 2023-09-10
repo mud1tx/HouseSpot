@@ -6,8 +6,11 @@ import ToasterProvider from "./providers/ToasterProvider";
 import LoginModal from "./components/modals/LoginModal";
 import getCurrentUser from "./actions/getCurrentUser";
 import RentModal from "./components/modals/RentModal";
+import ClientOnly from './components/ClientOnly';
 
 const font = Nunito({ subsets: ["latin"] });
+
+export const dynamic = 'force-dynamic'
 
 export const metadata = {
   title: "HouseSpot",
@@ -23,11 +26,13 @@ export default async function RootLayout({
   return (
     <html lang="en">
       <body className={font.className}>
+      <ClientOnly>
         <ToasterProvider />
         <RegisterModal />
         <RentModal/>
         <LoginModal/>
         <Navbar currentUser = {currentUser}/>  
+        </ClientOnly>
         <div className="pb-20 pt-28">
           {children}
         </div>
