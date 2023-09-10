@@ -7,9 +7,11 @@ import getListings, {
 } from "@/app/actions/getListings";
 import getCurrentUser from "@/app/actions/getCurrentUser";
 
+export const dynamic = 'force-dynamic'
 interface HomeProps {
   searchParams: IListingsParams
 };
+
 
 const Home = async ({ searchParams }: HomeProps) => {
   const listings = await getListings(searchParams);
